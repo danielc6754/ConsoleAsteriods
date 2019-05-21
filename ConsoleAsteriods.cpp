@@ -23,7 +23,7 @@ private:
 	sSpaceObject player;
 
 	vector<pair<float, float>> vecModelShip;
-
+	vector<pair<float, float>> vecModelAsteroid;
 protected:
 	virtual bool OnUserCreate() {
 		vecAsteroids.push_back({ 20.0f, 20.0f, 8.0f, -6.0f, (int)16, 0.0f });
@@ -37,6 +37,13 @@ protected:
 
 		// Simple Isoceles Triangle
 		vecModelShip = { { 0.0f, -5.0f }, { -2.5f, +2.5f }, { +2.5f, +2.5f } };
+		
+		int verts = 20;
+		for (int i = 0; i < verts; i++) {
+			float radius = 1.0f;
+			float a = ((float)i / (float)verts) * 6.28318f;
+			vecModelAsteroid.push_back(make_pair(radius * sinf(a), radius * cosf(a)));
+		}
 
 		return true;
 	}
@@ -70,14 +77,12 @@ protected:
 			a.y += a.dy * fElapsedTime;
 			WrapCoordinates(a.x, a.y, a.x, a.y);
 
-			// Drawing asteroid as rectangle for now
-			for (int x = 0; x < a.nSize; x++)
-				for (int y = 0; y < a.nSize; y++)
-					Draw(a.x + x, a.y + y, PIXEL_SOLID, FG_RED);
+			// Drawing asteroid 
+			DrawWireFrameModel(vecModelAsteroid, a.x, a.y, a.angle, a.nSize);
 		}
 
 		// Draw Ship
-		DrawWireFrameModel(vecModelShip, player.x, player.y, player.angle, 5.0f);
+		DrawWireFrameModel(vecModelShip, player.x, player.y, player.angle);
 
 		return true;
 	}
